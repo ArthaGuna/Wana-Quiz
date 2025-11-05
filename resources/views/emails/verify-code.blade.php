@@ -1,12 +1,14 @@
-Halo {{ $user->name }},
+<p>Halo <strong>{{ $user->name }}</strong>,</p>
 
-Kode verifikasi kamu adalah:
-====================================================
-{{ $code }}
-====================================================
+<p>Terima kasih telah membuat akun di <strong>Wana Quiz</strong>.</p>
 
-Kode ini berlaku selama 10 menit.
-Masukkan kode ini di halaman verifikasi email untuk mengaktifkan akunmu.
+<p>Silakan gunakan kode verifikasi berikut:</p>
 
-Terima kasih,
-Tim Wana Quiz
+<div style="font-size: 22px; font-weight: bold; text-align: center; padding: 14px; border: 2px solid #6B21A8; border-radius: 8px; width: fit-content; margin: auto;">
+    {{ $code }}
+</div>
+
+<p>Kode ini berlaku selama <strong>10 menit</strong>.</p>
+<p>Jika kamu tidak merasa melakukan pendaftaran, abaikan email ini.</p>
+
+<p>Salam,<br>Tim Wana Quiz</p>

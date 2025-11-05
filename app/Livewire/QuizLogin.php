@@ -21,7 +21,7 @@ class QuizLogin extends Component
         $this->errorMessage = 'Kode kuis salah!';
     }
 
-    #[Layout('layouts.app')]
+    #[Layout('layouts.sidebar')]
     public function render()
     {
         return view('livewire.quiz-login');

@@ -18,25 +18,36 @@
 </head>
 
 <body class="font-sans antialiased">
-    <div class="min-h-screen bg-gray-100">
-        @include('layouts.navigation')
+    @php
+        $currentRoute = request()->route()->getName();
+        $hideLayout = in_array($currentRoute, ['quiz.login', 'quiz.page', 'quiz.start']);
+    @endphp
 
-        <!-- Page Heading -->
-        @isset($header)
-            <header class="bg-white shadow">
-                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                    {{ $header }}
-                </div>
-            </header>
-        @endisset
+    <div class="min-h-screen bg-gray-100">
+        @unless($hideLayout)
+            @include('layouts.navigation')
+            
+            <!-- Page Heading -->
+            @isset($header)
+                <header class="bg-white shadow">
+                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                        {{ $header }}
+                    </div>
+                </header>
+            @endisset
+        @endunless
 
         <!-- Page Content -->
-        <main>
+        <main class="{{ $hideLayout ? 'flex items-center justify-center min-h-screen' : '' }}">
             {{ $slot }}
         </main>
     </div>
+    
     @livewireScripts
-    @include('layouts.footer')
+    
+    @unless($hideLayout)
+        @include('layouts.footer')
+    @endunless
 </body>
 
 </html>

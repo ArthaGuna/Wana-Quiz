@@ -16,6 +16,10 @@ Route::get('/about', function () {
     return view('about');
 });
 
+Route::get('/siswa', function () {
+    return view('livewire.siswa');
+});
+
 require __DIR__ . '/auth.php';
 
 // Verifikasi Email 
@@ -24,6 +28,9 @@ Route::post('/verify-email', [VerificationController::class, 'verify'])->name('c
 Route::post('/resend-code', [VerificationController::class, 'resendCode'])->name('verification.resend');
 
 Route::middleware(['auth', RoleAccess::class])->group(function () {
+
+    // Users
+
 
     // Halaman Kuis
     Route::get('/quiz-login', QuizLogin::class)->name('quiz.login');
