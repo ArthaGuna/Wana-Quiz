@@ -28,19 +28,25 @@ class VerificationController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if (!$user) {
-            return back()->withErrors(['email' => 'Email tidak ditemukan']);
+            return back()->withErrors(['email' => 'Email tidak ditemukan'])->with('email', $request->email);
         }
 
         if ($user->email_verified_at) {
             return redirect()->route('login')->with('success', 'Email sudah diverifikasi. Silakan login.');
         }
 
+        // Cek kode verifikasi
         if ((string)$user->verification_code !== trim($request->code)) {
-            return back()->withErrors(['code' => 'Kode verifikasi salah']);
+            return back()
+                ->withErrors(['code' => 'Kode verifikasi salah'])
+                ->with('email', $request->email);
         }
 
+        // Cek masa berlaku kode
         if (Carbon::now()->greaterThan($user->code_expires_at)) {
-            return back()->withErrors(['code' => 'Kode sudah kedaluwarsa']);
+            return back()
+                ->withErrors(['code' => 'Kode sudah kedaluwarsa'])
+                ->with('email', $request->email);
         }
 
         // Verifikasi sukses
@@ -50,7 +56,7 @@ class VerificationController extends Controller
             'code_expires_at' => null
         ]);
 
-        return redirect('/login')->with('success', 'Verifikasi berhasil! Silakan login.');
+        return redirect()->route('login')->with('success', 'Verifikasi berhasil! Silakan login.');
     }
 
     // Kirim ulang kode
@@ -67,7 +73,7 @@ class VerificationController extends Controller
         }
 
         if ($user->email_verified_at) {
-            return redirect()->route('/login')->with('success', 'Email sudah diverifikasi.');
+            return redirect()->route('login')->with('success', 'Email sudah diverifikasi.');
         }
 
         // Batasi kirim ulang tiap 1 menit
@@ -82,12 +88,10 @@ class VerificationController extends Controller
             'code_expires_at' => Carbon::now()->addMinutes(10)
         ]);
 
-        // Kirim email
         Mail::raw("Kode verifikasi kamu adalah: {$code}", function ($message) use ($user) {
-            $message->to($user->email)
-                ->subject('Kode Verifikasi Email');
+            $message->to($user->email)->subject('Kode Verifikasi Email');
         });
 
-        return back()->with('success', 'Kode verifikasi telah dikirim ulang ke email.');
+        return back()->with('success', 'Kode verifikasi telah dikirim ulang ke email.')->with('email', $user->email);
     }
 }

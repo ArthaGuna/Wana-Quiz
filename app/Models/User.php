@@ -52,4 +52,20 @@ class User extends Authenticatable
             'code_expires_at' => 'datetime'
         ];
     }
+
+    // Relationships
+    public function quizzes()
+    {
+        return $this->hasMany(Quiz::class);
+    }
+
+    public function quizAttempts()
+    {
+        return $this->hasMany(QuizAttempt::class);
+    }
+
+    public function aiPrompts()
+    {
+        return $this->hasMany(AiPrompt::class);
+    }
 }
